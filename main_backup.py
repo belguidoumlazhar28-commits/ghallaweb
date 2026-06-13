@@ -5,6 +5,7 @@ import math
 import re
 import smtplib
 import tempfile
+import signal # إضافة مكتبة الإشارات
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
@@ -13,6 +14,14 @@ from fpdf import FPDF
 from arabic_reshaper import reshape
 from bidi.algorithm import get_display
 from pathlib import Path
+
+# --- رقعة سحرية لتجاوز خطأ الإشارات في البيئات السحابية المقيدة (Streamlit/Render) ---
+try:
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
+except ValueError:
+    # إذا رفض السيرفر تغيير الإشارات، نقوم بتعطيل الدالة تماماً لمنع الانهيار
+    signal.signal = lambda *args, **kwargs: None
+# -------------------------------------------------------------------------
 
 # ----------------- الإعدادات الأمنية والبريد (Web Config) -----------------
 WEB_CONFIG = {
@@ -765,7 +774,6 @@ def main(page: ft.Page):
     show_login_screen()
 
 if __name__ == "__main__":
-    # هذا التعديل يجعل التطبيق يعمل بذكاء في بيئة الويب والسحابة
-    # يتجنب الخطأ الخاص بـ signal.signal ويسمح للسيرفر بتحديد المنفذ تلقائياً
-    port = int(os.getenv("PORT", 8550))
-    ft.app(target=main, port=port)
+    # تشغيل التطبيق بنمط يتوافق مع قيود السحابة
+    # نستخدم الحفظ التلقائي للمنفذ لتجنب التعارض
+    ft.app(target=main)
