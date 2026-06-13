@@ -776,4 +776,4 @@ def main(page: ft.Page):
 if __name__ == "__main__":
     # تشغيل التطبيق بنمط يتوافق مع قيود السحابة
     # نستخدم الحفظ التلقائي للمنفذ لتجنب التعارض
-    ft.app(target=main)
+    ft.app(target=main, view=None, port=int(os.getenv("PORT", 8550)))
