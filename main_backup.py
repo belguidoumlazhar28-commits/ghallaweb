@@ -14,6 +14,7 @@ from fpdf import FPDF
 from arabic_reshaper import reshape
 from bidi.algorithm import get_display
 from pathlib import Path
+import flet.fastapi as flet_fastapi
 
 # ----------------- الإعدادات الأمنية والبريد (Web Config) -----------------
 WEB_CONFIG = {
@@ -765,7 +766,12 @@ def main(page: ft.Page):
     # البدء بشاشة تسجيل الدخول للحماية
     show_login_screen()
 
+# إنشاء تطبيق الويب المتوافق مع السيرفرات العالمية
+app = flet_fastapi.app(main)
+
 if __name__ == "__main__":
-    # تشغيل التطبيق بنمط الويب الاحترافي لـ Render
-    # host="0.0.0.0" ضروري جداً لفتح الاتصال بالإنترنت
-    ft.app(target=main, host="0.0.0.0", port=int(os.getenv("PORT", 8550)))
+    import uvicorn
+    import os
+    # تشغيل السيرفر بأداء عالي ومتوافق مع Render
+    port = int(os.getenv("PORT", 8550))
+    uvicorn.run("main_backup:app", host="0.0.0.0", port=port)

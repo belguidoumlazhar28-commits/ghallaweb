@@ -1,4 +1,5 @@
-flet>=0.21.0
+flet
+flet-fastapi
 fpdf2
 arabic-reshaper
 python-bidi
