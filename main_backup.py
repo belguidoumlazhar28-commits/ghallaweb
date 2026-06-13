@@ -5,7 +5,7 @@ import math
 import re
 import smtplib
 import tempfile
-import signal # إضافة مكتبة الإشارات
+# حذف مكتبة signal لأن Render لا يحتاجها وتسبب تعليق الشعار
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
@@ -14,14 +14,6 @@ from fpdf import FPDF
 from arabic_reshaper import reshape
 from bidi.algorithm import get_display
 from pathlib import Path
-
-# --- رقعة سحرية لتجاوز خطأ الإشارات في البيئات السحابية المقيدة (Streamlit/Render) ---
-try:
-    signal.signal(signal.SIGINT, signal.SIG_DFL)
-except ValueError:
-    # إذا رفض السيرفر تغيير الإشارات، نقوم بتعطيل الدالة تماماً لمنع الانهيار
-    signal.signal = lambda *args, **kwargs: None
-# -------------------------------------------------------------------------
 
 # ----------------- الإعدادات الأمنية والبريد (Web Config) -----------------
 WEB_CONFIG = {
@@ -297,7 +289,7 @@ def main(page: ft.Page):
     
     header = ft.Container(
         content=ft.Column([
-            ft.Image(src=logo_path, width=100, height=100) if logo_path else ft.Icon(ft.icons.FACTORY, size=50, color="blue900"),
+            ft.Image(src=logo_path, width=100, height=100) if logo_path else ft.Icon(ft.icons.PRECISION_MANUFACTURING, size=50, color="blue900"),
             ft.Text("مؤسسة الغلة للإنتاج", size=26, weight=ft.FontWeight.BOLD, color="blue900"),
             ft.Text("SARL PLASTIQUE EL-GHALLA", size=13, weight=ft.FontWeight.W_500, color="green700"),
             ft.Divider(height=2, color="blue200")
@@ -774,6 +766,6 @@ def main(page: ft.Page):
     show_login_screen()
 
 if __name__ == "__main__":
-    # تشغيل التطبيق بنمط يتوافق مع قيود السحابة
-    # نستخدم الحفظ التلقائي للمنفذ لتجنب التعارض
-    ft.app(target=main, view=None, port=int(os.getenv("PORT", 8550)))
+    # تشغيل التطبيق بنمط الويب الاحترافي لـ Render
+    # host="0.0.0.0" ضروري جداً لفتح الاتصال بالإنترنت
+    ft.app(target=main, host="0.0.0.0", port=int(os.getenv("PORT", 8550)))
