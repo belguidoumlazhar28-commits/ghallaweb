@@ -765,5 +765,7 @@ def main(page: ft.Page):
     show_login_screen()
 
 if __name__ == "__main__":
-    # تشغيل التطبيق كـ Web App
-    ft.app(target=main, view=ft.AppView.WEB_BROWSER, port=8550)
+    # هذا التعديل يجعل التطبيق يعمل بذكاء في بيئة الويب والسحابة
+    # يتجنب الخطأ الخاص بـ signal.signal ويسمح للسيرفر بتحديد المنفذ تلقائياً
+    port = int(os.getenv("PORT", 8550))
+    ft.app(target=main, port=port)
